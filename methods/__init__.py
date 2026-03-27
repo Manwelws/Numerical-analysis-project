@@ -1,2 +1,2 @@
-from .base import root_finding, linear_system
+from .base import RootFinding, LinearSystem
 from .root_finding import Bisection

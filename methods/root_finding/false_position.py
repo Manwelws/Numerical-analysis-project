@@ -1,7 +1,7 @@
-from ..base import root_finding
+from ..base import RootFinding
 
 
-class false_pos(root_finding):
+class FalsePosition(RootFinding):
     def __init__(self, f, xl, xu, tol=1e-6, max_iter=100):
         super().__init__(f, tol, max_iter)
         self.xl = xl

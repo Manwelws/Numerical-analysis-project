@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-class root_finding(ABC):
+class RootFinding(ABC):
     def __init__(self, f, tol=1e-6, max_iter=100):
         self.f = f
         self.tol = tol
@@ -16,7 +16,7 @@ class root_finding(ABC):
         self.iterations.append(row)
 
 
-class linear_system(ABC):
+class LinearSystem(ABC):
     def __init__(self):
         self.steps = []
 
