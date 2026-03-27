@@ -9,7 +9,7 @@ from sympy.parsing.sympy_parser import (
 )
 
 transformations = (
-    standard_transformations
+    standard_transformations  # already a tuple of multiple transformations functions
     + (implicit_multiplication_application,)
     + (implicit_application,)
     + (function_exponentiation,)
@@ -18,9 +18,10 @@ transformations = (
 
 # parse the string input passed by user with numpy functions
 def parse_func(expr_str: str):
+    expr_str = expr_str.strip().lower()
     x = symbols("x")
     expr = parse_expr(expr_str, transformations=transformations)
     f = lambdify(x, expr, "numpy")
-    f_prime = lambdify(x, expr.diff(x), "numpy")
+    f_prime = lambdify(x, expr.diff(x), "numpy")  # for newton
 
     return f, f_prime

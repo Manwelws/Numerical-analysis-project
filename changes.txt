@@ -1,0 +1,5 @@
+changed naming conventions :
+    modules,functions -> snake_case
+    classes -> PascalCase
+
+created the implementation for simple fixed point , newton
