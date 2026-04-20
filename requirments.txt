@@ -2,3 +2,4 @@ sympy
 matplotlib
 seaborn
 streamlit
+copy

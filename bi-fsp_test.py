@@ -17,7 +17,7 @@ Choose a method:
 2: FalsePosition,
 3: SimpleFixedPoint,
 4: Newton,
-                        """)
+:""")
 
     user_func = input("Enter func of x: ").strip()
     f, _ = parse_func(user_func)

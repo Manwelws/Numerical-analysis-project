@@ -8,10 +8,10 @@ class SimpleFixedPoint(RootFinding):
 
     def solve(self):
         self.iterations = []
-        x = self.x0
+        x = self.xi
 
         for i in range(1, self.max_iter + 1):
-            x_new = self.g(x)
+            x_new = self.f(x)
             error = abs((x_new - x) / x_new) * 100 if x_new != 0 else float("inf")
 
             self._record(iteration=i, x=x, g_x=x_new, error=error)
