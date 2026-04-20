@@ -19,8 +19,7 @@ class Secant(RootFinding):
             if f_xi_1 - f_xi == 0:
                 return {"root": xi, "iterations": self.iterations, "converged": False}
 
-            x_new = xi - ((f_xi - (xi_1 - xi)) / f_xi_1 - f_xi)
-
+            x_new = xi - (f_xi * (xi_1 - xi)) / (f_xi_1 - f_xi)
             error = abs((x_new - xi) / x_new) * 100 if x_new != 0 else float("inf")
 
             self._record(

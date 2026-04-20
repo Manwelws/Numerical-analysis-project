@@ -37,7 +37,7 @@ class CramersRule(LinearSystem):
         self._record("Original A", copy.deepcopy(A))
         self._record("RHS vector B", B[:])
 
-        det_A = self._determinant(A)
+        det_A = self._determine(A)
         self._record(f"det(A) = {det_A}", None)
 
         if abs(det_A) < 1e-12:
@@ -48,7 +48,7 @@ class CramersRule(LinearSystem):
         x = []
         for i in range(n):
             A_i = self._replace_column(A, B, i)
-            det_Ai = self._determinant(A_i)
+            det_Ai = self._determine(A_i)
             xi = det_Ai / det_A
             self._record(f"det(A_{i}) = {det_Ai}  →  x[{i}] = {xi}", copy.deepcopy(A_i))
             x.append(xi)

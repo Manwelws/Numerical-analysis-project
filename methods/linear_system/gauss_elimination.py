@@ -6,7 +6,7 @@ class GaussElimination(LinearSystem):
     def solve(self, A, B):
         self.steps = []
 
-        M = [A[i][:] + B[i] for i in range(len(A))]
+        M = [A[i][:] + [B[i]] for i in range(len(A))]
         self._record("Initial augmented matrix [A|B]", copy.deepcopy(M))
         n = len(A)
         multipliers = {}  # for lu

@@ -7,7 +7,7 @@ class LUDecomposition(LinearSystem):
     def solve(self, A, B):
         self.steps = []
         n = len(A)
-        ge = GaussElimination
+        ge = GaussElimination()
         ge_result = ge.solve(A=[row[:] for row in A], B=B)  # pass args to ge
 
         for step in ge_result["steps"]:  # saving the history
