@@ -2,7 +2,7 @@ import copy
 from methods.base import LinearSystem
 
 
-class GaussJordan(LinearSystem):
+class GaussJordanPivot(LinearSystem):
     def solve(self, A: list, B: list) -> dict:
         self.steps = []
         n = len(A)
@@ -11,15 +11,21 @@ class GaussJordan(LinearSystem):
         self._record("Initial augmented matrix [A|B]", copy.deepcopy(M))
 
         for col in range(n):
+            # ── Partial Pivot: find row with max |value| in this column ──
+            max_row = max(range(col, n), key=lambda r: abs(M[r][col]))
+            if max_row != col:
+                M[col], M[max_row] = M[max_row], M[col]
+                self._record(f"Swapped row {col} ↔ row {max_row}", copy.deepcopy(M))
+
             pivot = M[col][col]
-            if pivot == 0:
-                raise ValueError(f"Zero pivot at column {col}. Use partial pivoting.")
+            if abs(pivot) < 1e-12:
+                raise ValueError(f"Matrix is singular at column {col}.")
 
             # Normalize pivot row
             for j in range(col, n + 1):
                 M[col][j] /= pivot
 
-            # Eliminate ALL other rows (above and below)
+            # Eliminate ALL other rows
             for row in range(n):
                 if row == col:
                     continue
