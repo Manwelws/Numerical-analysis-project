@@ -13,7 +13,7 @@ class RootFinding(ABC):
         pass
 
     def _record(self, **row):
-        self.iterations.append(row)
+        self.iterations.append(row)  # list of dictionaries
 
 
 class LinearSystem(ABC):
