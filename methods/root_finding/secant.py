@@ -2,7 +2,7 @@ from methods.base import RootFinding
 
 
 class Secant(RootFinding):
-    def __init__(self, f, xi, xi_1, tol=1e-6, max_iter=100):
+    def __init__(self, f, xi, xi_1, tol=0.0001, max_iter=50):
         super().__init__(f=f, tol=tol, max_iter=max_iter)
         self.xi = xi
         self.xi_1 = xi_1

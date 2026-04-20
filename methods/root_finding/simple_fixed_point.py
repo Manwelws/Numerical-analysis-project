@@ -2,7 +2,7 @@ from methods.base import RootFinding
 
 
 class SimpleFixedPoint(RootFinding):
-    def __init__(self, g, xi, tol=1e-6, max_iter=100):
+    def __init__(self, g, xi, tol=0.0001, max_iter=50):
         super().__init__(f=g, tol=tol, max_iter=max_iter)
         self.xi = xi
 

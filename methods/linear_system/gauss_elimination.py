@@ -1,43 +1,43 @@
-import copy
+import numpy as np
 from methods.base import LinearSystem
 
 
 class GaussElimination(LinearSystem):
-    def solve(self, A, B):
-        self.steps = []
+    def __init__(self, A: list, B: list) -> dict:
+        self.A = np.array(A, dtype=np.float64)
+        self.B = np.array(B, dtype=np.float64).flatten()
 
-        M = [A[i][:] + [B[i]] for i in range(len(A))]
-        self._record("Initial augmented matrix [A|B]", copy.deepcopy(M))
-        n = len(A)
-        multipliers = {}  # for lu
+    def solve(self):
+        self.steps = []
+        n = len(self.A)
+        multipliers = {}
+
+        M = np.column_stack((self.A, self.B))
+        self._record("Initial augmented matrix [A|B]", M.copy())
 
         # forward elimination
         for col in range(n):
-            pivot = M[col][col]
-            if pivot == 0:
-                raise ValueError(f"Zero pivot at column {col}. Use partial pivoting.")
-
+            pivot = M[col, col]
+            if np.isclose(pivot, 0.0):
+                raise ValueError(
+                    f"Zero pivot detected at column {col + 1}. System requires partial pivoting."
+                )
             for row in range(col + 1, n):
-                m = M[row][col] / pivot
+                m = M[row, col] / pivot
                 multipliers[(row, col)] = m
 
-                for j in range(col, n + 1):
-                    M[row][j] -= m * M[col][j]
+                M[row, col:] = M[row, col:] - (m * M[col, col:])
 
-            self._record(f"After eliminating column {col}", copy.deepcopy(M))
-
+                self._record(f"After eliminating column {col + 1}", M.copy())
         # Back sub
-        x = [0.0] * n  # creates a row vector of length n to save right answers
-        for i in range(n - 1, -1, -1):  # reverse loop
-            x[i] = M[i][n]  # loop through the 4th colm
-            for j in range(i + 1, n):
-                x[i] -= M[i][j] * x[j]
-            x[i] /= M[i][i]
+        x = np.zeros(n)
+        for i in range(n - 1, -1, -1):
+            x[i] = (M[i, n] - np.dot(M[i, i + 1 : n], x[i + 1 : n])) / M[i, i]
 
         self._record("Solution vector x", x)
         return {
-            "solution": x,
+            "solution": x.tolist(),
             "steps": self.steps,
             "multipliers": multipliers,
-            "upper": M,
+            "upper": M.tolist(),
         }

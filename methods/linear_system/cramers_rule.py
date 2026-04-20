@@ -1,57 +1,43 @@
-import copy
+import numpy as np
 from methods.base import LinearSystem
 
 
 class CramersRule(LinearSystem):
-    def _determine(self, M: list) -> float:
-        n = len(M)
+    def __init__(self, A, B):
+        self.A = np.array(A, dtype=np.float64)
+        self.B = np.array(B, dtype=np.float64).flatten()
 
-        if n == 1:
-            return M[0][0]
-        if n == 2:
-            return M[0][0] * M[1][1] - M[0][1] * M[1][0]  # ad-bc
-
-        det = 0.0
-        for col in range(n):
-            minor = [
-                [
-                    M[row][j] for j in range(n) if j != col
-                ]  # not taking the col we are in rn
-                for row in range(1, n)  # no 0 so the first row is out
-            ]
-            det += (-1) ** col * M[0][col] * self._determine(minor)
-            # ((-1)**col) alternating signs as if col was even -> pos , odd -> neg
-
-        return det
-
-    def _replace_column(self, A: list, B: list, col: int) -> list:  # to get A_i
-        n = len(A)
-        return [
-            [B[row] if j == col else A[row][j] for j in range(n)] for row in range(n)
-        ]
-
-    def solve(self, A: list, B: list) -> dict:
+    def solve(self):
         self.steps = []
-        n = len(A)
+        n = len(self.A)
 
-        self._record("Original A", copy.deepcopy(A))
-        self._record("RHS vector B", B[:])
+        self._record("Original A", self.A.tolist())
+        self._record("RHS vector B", self.B.tolist())
 
-        det_A = self._determine(A)
-        self._record(f"det(A) = {det_A}", None)
+        det_A = np.linalg.det(self.A)
+        self._record(f"det(A) = {det_A:.6f}", None)
 
-        if abs(det_A) < 1e-12:
+        if np.isclose(det_A, 0.0, atol=1e-12):
             raise ValueError(
                 "Matrix is singular (det(A) ≈ 0). Cramer's Rule cannot be applied."
             )
 
-        x = []
-        for i in range(n):
-            A_i = self._replace_column(A, B, i)
-            det_Ai = self._determine(A_i)
-            xi = det_Ai / det_A
-            self._record(f"det(A_{i}) = {det_Ai}  →  x[{i}] = {xi}", copy.deepcopy(A_i))
-            x.append(xi)
+        x = np.zeros(n)
 
-        self._record("Solution vector x", x[:])
-        return {"solution": x, "det_A": det_A, "steps": self.steps}
+        for i in range(n):
+            A_i = self.A.copy()
+
+            A_i[:, i] = self.B
+
+            det_Ai = np.linalg.det(A_i)
+
+            x[i] = det_Ai / det_A
+
+            self._record(
+                f"det(A_{i + 1}) = {det_Ai:.6f}  →  x[{i + 1}] = {x[i]:.6f}",
+                A_i.tolist(),
+            )
+
+        self._record("Solution vector x", x.tolist())
+
+        return {"solution": x.tolist(), "det_A": float(det_A), "steps": self.steps}

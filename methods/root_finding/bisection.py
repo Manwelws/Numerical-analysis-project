@@ -2,7 +2,7 @@ from methods.base import RootFinding
 
 
 class Bisection(RootFinding):
-    def __init__(self, f, xl, xu, tol=1e-6, max_iter=100):
+    def __init__(self, f, xl, xu, tol=0.0001, max_iter=50):
         super().__init__(f, tol, max_iter)
         self.xl = xl
         self.xu = xu

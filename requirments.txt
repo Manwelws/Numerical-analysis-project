@@ -2,4 +2,4 @@ sympy
 matplotlib
 seaborn
 streamlit
-copy
+numpy
