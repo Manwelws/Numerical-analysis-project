@@ -76,7 +76,7 @@ if category == "1-Root Finding":
         if method == "Simple Fixed Point":
             func_str = st.text_input(
                 "Iteration Function $g(x)$ (where $x = g(x)$)",
-                placeholder="math.sqrt(x + 2)",
+                placeholder="sqrt(x + 2)",
             )
         else:
             func_str = st.text_input(
